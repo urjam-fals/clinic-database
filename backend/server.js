@@ -24,6 +24,21 @@ app.get('/doctors', (req, res) => {
     });
 }); 
 
+//patients api route
+app.get('/patients', (req, res) => {
+    db.all('SELECT * FROM PATIENT', [], (err, rows) => {
+        if (err) return res.json(err);
+        res.json(rows);
+    });
+}); 
+
+//consultations api route
+app.get('/consult', (req, res) => {
+    db.all('SELECT * FROM CONSULTATION', [], (err, rows) => {
+        if (err) return res.json(err);
+        res.json(rows);
+    });
+}); 
 // app.post('/doctors', (req, res) => {
 //     const newItem = req.body.item;
 //     doctors.push(newItem);

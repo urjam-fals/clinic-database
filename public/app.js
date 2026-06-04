@@ -1,23 +1,75 @@
 
-const form = document.getElementById('doctor-form');
+const doctorForm = document.getElementById('doctor-form');
+const doctorList = document.getElementById('doctor-list');
 
-const list = document.getElementById('output');
+const patientForm = document.getElementById('patient-form');
+const patientList = document.getElementById('patient-list');
 
-form.addEventListener('submit', async (e) => {
+const consultationForm = document.getElementById('consultation-form');
+const consultationList = document.getElementById('consultation-list');
+
+doctorForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     loadDoctors();   
+});
+
+patientForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loadPatients();   
+});
+
+consultationForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loadConsultations();   
 });
 
 async function loadDoctors() {
     const response = await fetch('/doctors');
     const doctors = await response.json();
-    list.innerHTML = doctors.map(doc => 
-        `<li>${doc.docFName} ${doc.docLName} - ${doc.docSpecial}</li>
-        `).join('');
-    // fetch('http://localhost:3000/doctors')
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         document.getElementById('output').textContent = 
-    //         JSON.stringify(data, null, 2);
-    //     });
+    doctorList.innerHTML = doctors.map(doc => 
+        `<tr>
+            <td>${doc.docID}</td>
+            <td>${doc.docFName}</td>
+            <td>${doc.docLName}</td>
+            <td>${doc.docAddress}</td>
+            <td>${doc.docSpecial}</td>
+        </tr>`   
+    ).join('');
+}
+
+async function loadPatients() {
+    const response = await fetch('/patients');
+    const patients = await response.json();
+    patientList.innerHTML = patients.map(pat => 
+        `<tr>
+            <td>${pat.patID}</td>
+            <td>${pat.patFName}</td>
+            <td>${pat.patLName}</td>
+            <td>${pat.patBDate}</td>
+            <td>${pat.patTelNo}</td>
+        </tr>`   
+    ).join('');
+}
+
+async function loadConsultations() {
+    const response = await fetch('/consult');
+    const consult = await response.json();
+    consultationList.innerHTML = consult.map(con => 
+        `<tr>
+            <td>${con.consultID}</td>
+            <td>${con.patID}</td>
+            <td>${con.docID}</td>
+            <td>${con.consultDate}</td>
+            <td>${con.diagnosis}</td>
+            <td>${con.prescription}</td>
+        </tr>`   
+    ).join('');
+}
+
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+
+    document.getElementById(pageId).classList.add('active');
 }

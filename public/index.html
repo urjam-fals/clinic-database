@@ -7,12 +7,84 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h2>Clinic Consultations Logging System</h2>
-        <form id="doctor-form">
-            <button type="submit">Load Doctors</button>
-            
-        </form>
-        <ul id="output"></ul>
+        <section class="page active" id="home-page">
+            <h2>Clinic Consultations Logging System</h2>
+            <form id="doctor-form">
+                <button type="submit" onclick="showPage('doctor-page')">Load Doctors</button>            
+            </form>
+            <form id="patient-form">
+                <button type="submit" onclick="showPage('patient-page')">Load Patients</button>
+            </form>
+            <form id="consultation-form">
+                <button type="submit" onclick="showPage('consultation-page')">Load Consultations</button>  
+            </form>       
+        </section>
+        
+        <section class="page" id="doctor-page">
+            <div class="container">
+                <table class="doctor-table">
+                    <thead>
+                        <tr>
+                            <th>ID Number</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Address</th>
+                            <th>Specialization</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctor-list">
+                        <!-- Doctor data will be populated here -->
+                    </tbody>
+                </table>
+                <!-- <ul id="output"></ul> -->
+            </div>
+            <button type="submit" onclick="showPage('home-page')">Back to Home</button>
+        </section>
+
+        <section class="page" id="patient-page">
+            <div class="container">
+                <table class="patient-table">
+                    <thead>
+                        <tr>
+                            <th>ID Number</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Birthdate</th>
+                            <th>Telephone Number</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patient-list">
+                        <!-- Patient data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" onclick="showPage('home-page')">Back to Home</button>
+        </section>
+        
+        <section class="page" id="consultation-page">
+            <div class="container">
+                <!-- <form id="consultation-form">
+
+                </form> -->
+                <table class="consultation-table">
+                    <thead>
+                        <tr>
+                            <th>ID Number</th>
+                            <th>Patient ID No.</th>
+                            <th>Doctor ID No.</th>
+                            <th>Consult Date</th>
+                            <th>Diagnosis</th>
+                            <th>Prescription</th>
+                        </tr>
+                    </thead>
+                    <tbody id="consultation-list">
+                        <!-- Consultation data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" onclick="showPage('home-page')">Back to Home</button>
+        </section>
+
         <script src= "app.js"></script>
     </body>
 </html>

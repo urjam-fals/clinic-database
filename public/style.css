@@ -1,0 +1,76 @@
+.page{ display: none;}
+.page.active{ display:block; }
+
+.container {
+    padding: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 8px 15px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width:100%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.doctor-table th:nth-child(1),
+.doctor-table td:nth-child(1),
+.patient-table th:nth-child(1),
+.patient-table td:nth-child(1),
+.patient-table th:nth-child(4),
+.patient-table td:nth-child(4),
+.consultation-table th:nth-child(1),
+.consultation-table td:nth-child(1),
+.consultation-table th:nth-child(2),
+.consultation-table td:nth-child(2),
+.consultation-table th:nth-child(3),
+.consultation-table td:nth-child(3) {
+    width: 80px; /* adjust if needed (60px–100px) */
+    text-align: center;
+}
+
+.doctor-table th:nth-child(2), 
+.doctor-table td:nth-child(2),
+.doctor-table th:nth-child(3),
+.doctor-table td:nth-child(3),
+.doctor-table th:nth-child(5), 
+.doctor-table td:nth-child(5),
+.patient-table th:nth-child(2),
+.patient-table td:nth-child(2),
+.patient-table th:nth-child(3),
+.patient-table td:nth-child(3),
+.patient-table th:nth-child(5), 
+.patient-table td:nth-child(5){ 
+    width: 100px; 
+    text-align: center;
+}
+
+.doctor-table th:nth-child(4), 
+.doctor-table td:nth-child(4),
+.consultation-table th:nth-child(4), 
+.consultation-table td:nth-child(4),
+.consultation-table th:nth-child(5), 
+.consultation-table td:nth-child(5),
+.consultation-table th:nth-child(6), 
+.consultation-table td:nth-child(6){ 
+    width: 200px; 
+    text-align: center;
+}
+
