@@ -1,26 +1,37 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const db = require('./db');
 
 const app = express();
+const port = 3000;
+
 app.use(cors());
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, '../public')));
+
 //Root Route
 app.get('/', (req, res) => {
-    res.send('Clinic Consultations Logging System');
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-//Test Route
-app.get('/test', (req, res) => {
+//doctors api route
+app.get('/doctors', (req, res) => {
     db.all('SELECT * FROM DOCTOR', [], (err, rows) => {
         if (err) return res.json(err);
         res.json(rows);
     });
 }); 
 
+// app.post('/doctors', (req, res) => {
+//     const newItem = req.body.item;
+//     doctors.push(newItem);
+//     res.json(doctors);       
+// });
+
 //Start Server
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
 
