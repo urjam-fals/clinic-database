@@ -8,20 +8,27 @@
     </head>
     <body>
         <section class="page active" id="home-page">
-            <h2>Clinic Consultations Logging System</h2>
-            <form id="doctor-form">
-                <button type="submit" onclick="showPage('doctor-page')">Load Doctors</button>            
-            </form>
-            <form id="patient-form">
-                <button type="submit" onclick="showPage('patient-page')">Load Patients</button>
-            </form>
-            <form id="consultation-form">
-                <button type="submit" onclick="showPage('consultation-page')">Load Consultations</button>  
-            </form>       
+            
+            <div class="container">
+                <h2>Clinic Consultations Logging System</h2>
+                <form id="doctor-form">
+                    <button type="submit" onclick="showPage('doctor-page')">Doctors Management</button>            
+                </form>
+                <form id="patient-form">
+                    <button type="submit" onclick="showPage('patient-page')">Patients Management</button>
+                </form>
+                <form id="consultation-form">
+                    <button type="submit" onclick="showPage('consultation-page')">Consultation Transaction Management</button>  
+                </form>   
+            </div>
+    
         </section>
         
         <section class="page" id="doctor-page">
             <div class="container">
+                <input type="search" id="search-doctor" placeholder="Search by name...">
+                <button type="submit" onclick="showPage('home-page')">Back to Home</button>
+
                 <table class="doctor-table">
                     <thead>
                         <tr>
@@ -37,12 +44,14 @@
                     </tbody>
                 </table>
                 <!-- <ul id="output"></ul> -->
+                
             </div>
-            <button type="submit" onclick="showPage('home-page')">Back to Home</button>
+            
         </section>
 
         <section class="page" id="patient-page">
             <div class="container">
+                <button type="submit" onclick="showPage('home-page')">Back to Home</button>
                 <table class="patient-table">
                     <thead>
                         <tr>
@@ -58,11 +67,12 @@
                     </tbody>
                 </table>
             </div>
-            <button type="submit" onclick="showPage('home-page')">Back to Home</button>
+            
         </section>
         
         <section class="page" id="consultation-page">
             <div class="container">
+                <button type="submit" onclick="showPage('home-page')">Back to Home</button>
                 <!-- <form id="consultation-form">
 
                 </form> -->
@@ -82,7 +92,6 @@
                     </tbody>
                 </table>
             </div>
-            <button type="submit" onclick="showPage('home-page')">Back to Home</button>
         </section>
 
         <script src= "app.js"></script>

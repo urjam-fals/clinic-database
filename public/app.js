@@ -66,6 +66,17 @@ async function loadConsultations() {
     ).join('');
 }
 
+document.getElementById('search-doctor').addEventListener('keyup', function() {
+    const input = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#doctor-list tr');
+
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
+    });
+});
+
+
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
