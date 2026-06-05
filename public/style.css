@@ -1,3 +1,7 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
 .page{ display: none;}
 .page.active{ display:block; }
 
@@ -74,7 +78,9 @@ th {
 .consultation-table th:nth-child(5), 
 .consultation-table td:nth-child(5),
 .consultation-table th:nth-child(6), 
-.consultation-table td:nth-child(6){ 
+.consultation-table td:nth-child(6),
+.consultation-table th:nth-child(7), 
+.consultation-table td:nth-child(7){ 
     width: 200px; 
     text-align: center;
 }
@@ -85,11 +91,15 @@ th {
 
 .search-box input, 
 .add-doctor-form input, 
-.add-patient-form input {
+.add-patient-form input,
+.add-consultation-form input,
+.add-consultation-form textarea,
+.add-consultation-form select {
     width: 100%;
     max-width: 350px;
     padding: 10px 15px;
     font-size: 15px;
+    font-family: inherit;
     border: 1px solid #ccc;
     border-radius: 8px;
     outline: none;
@@ -97,12 +107,16 @@ th {
 }
 
 .add-doctor-form,
-.add-patient-form {
+.add-patient-form,
+.add-consultation-form {
     max-width: 400px;
     margin-top: 20px;
 }
 .add-doctor-form input:focus,
-.add-patient-form input:focus{
+.add-patient-form input:focus
+.add-consultation-form input:focus,
+.add-consultation-form textarea:focus,
+.add-consultation-form select:focus{
     border-color: #4CAF50;
     box-shadow: 0 0 4px rgba(76, 175, 80, 0.3);
 }

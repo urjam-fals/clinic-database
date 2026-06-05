@@ -12,6 +12,7 @@ const consultationList = document.getElementById('consultation-list');
 
 const addDoctorForm = document.getElementById('add-doctor-form');
 const addPatientForm = document.getElementById('add-patient-form');
+const addConsultForm = document.getElementById('add-consultation-form');
 
 doctorForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -110,6 +111,52 @@ addPatientForm.addEventListener('submit', async (e) => {
     addPatientForm.reset();
 });
 
+addConsultForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // 👉 PUT IT HERE
+    const rawDate = document.getElementById('conDate').value;
+    const formattedDate = rawDate.replace('T', ' ') + ':00';
+
+    //get values from inputs
+    const data = {
+        patID: document.getElementById('conPatId').value,
+        docID: document.getElementById('conDocId').value,
+        consultDate: formattedDate,
+        diagnosis: document.getElementById('conDiagnosis').value,
+        prescription: document.getElementById('conPrescription').value
+    };
+
+    if(window.editingId){
+        await fetch(`/consult/${window.editingId}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+
+        window.editingId = null;
+    }else{
+        //send to backend
+        await fetch('/consult', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+    }
+    
+    //reset title after save
+    document.querySelector('#consultation-add-page h2').innerText = "Add New Consultation";
+        
+    //reload table
+    loadConsultations();
+
+    //go back to doctor list page
+    showPage('consultation-page');
+
+    //clear form
+    addConsultForm.reset();
+});
+
 async function loadDoctors() {
     const response = await fetch('/doctors');
     doctors = await response.json(); //store globally
@@ -151,6 +198,7 @@ async function loadPatients() {
 async function loadConsultations() {
     const response = await fetch('/consult');
     const consult = await response.json();
+    
     consultationList.innerHTML = consult.map(con => 
         `<tr>
             <td>${con.consultID}</td>
@@ -159,6 +207,10 @@ async function loadConsultations() {
             <td>${con.consultDate}</td>
             <td>${con.diagnosis}</td>
             <td>${con.prescription}</td>
+            <td>
+                <button onclick="editPatient(${con.consultID})">Edit</button>
+                <button onclick="deletePatient(${con.consultID})">Delete</button>
+            </td>
         </tr>`   
     ).join('');
 }
@@ -186,6 +238,37 @@ async function deletePatient(id) {
     loadPatients(); //refresh table
 }
 
+async function loadPatientOptions(){
+    const response = await fetch('/patients');
+    const patients = await response.json();
+
+    const select = document.getElementById('conPatId');
+
+    select.innerHTML = patients.map(p => 
+        `<option value = "${p.patID}">
+            ${p.patFName} ${p.patLName} (ID: ${p.patID})
+        </option>`
+    ).join('');
+}
+
+async function loadDoctorOptions(){
+    const response = await fetch('/doctors');
+    const doctors = await response.json();
+
+    const select = document.getElementById('conDocId');
+
+    select.innerHTML = doctors.map(d => 
+        `<option value = "${d.docID}">
+            ${d.docFName} ${d.docLName} (ID: ${d.docID}) - (${d.docSpecial})
+        </option>`
+    ).join('');
+}
+
+function openConsultForm(){
+    showPage('consultation-add-page');
+    loadPatientOptions();
+    loadDoctorOptions();
+}
 function editDoctor(id){
     const doc = doctors.find(d => d.docID === id);
 
@@ -239,6 +322,16 @@ document.getElementById('search-doctor').addEventListener('keyup', function() {
 document.getElementById('search-patient').addEventListener('keyup', function() {
     const input = this.value.toLowerCase();
     const rows = document.querySelectorAll('#patient-list tr');
+
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
+    });
+});
+
+document.getElementById('search-consultation-trans').addEventListener('keyup', function() {
+    const input = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#consultation-list tr');
 
     rows.forEach(row => {
         const text = row.innerText.toLowerCase();

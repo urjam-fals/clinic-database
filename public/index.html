@@ -145,10 +145,16 @@
 
         <section class="page" id="consultation-page">
             <div class="container">
-                <button type="submit" onclick="showPage('home-page')">←</button>
+                <div class="search-box">
+                    <button type="button" onclick="showPage('home-page')">← Back</button>
+                    <input type="search" id="search-consultation-trans" placeholder="Search consultation transaction...">
+                    <button type="button" onclick="openConsultForm()">+ Add Consultation</button>
+                </div>
+                
                 <!-- <form id="consultation-form">
 
                 </form> -->
+                <h2>Consultation Transaction List</h2>
                 <table class="consultation-table">
                     <thead>
                         <tr>
@@ -158,6 +164,7 @@
                             <th>Consult Date</th>
                             <th>Diagnosis</th>
                             <th>Prescription</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="consultation-list">
@@ -167,6 +174,40 @@
             </div>
         </section>
 
+        <section class="page" id="consultation-add-page">
+            <div class="container">
+                
+                <h2>Add New Consultation</h2>
+                
+                <form id="add-consultation-form" class="add-consultation-form">
+                    <div class="form-group">
+                        <label>Patient ID</label>
+                        <select id="conPatId" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Doctor ID</label>
+                        <select id="conDocId" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Consultation Date</label>
+                        <input type="datetime-local" id="conDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Diagnosis</label>
+                        <textarea id="conDiagnosis" placeholder="Enter description of diagnosis" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Prescription</label>
+                        <textarea id="conPrescription" placeholder="Enter description of prescription" rows="4" required></textarea>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn-primary">Save</button>
+                        <button type="button" class="btn-secondary" onclick="showPage('consultation-page')">Cancel</button>
+                    </div>             
+                </form>   
+            </div>
+
+        </section>
         <script src= "app.js"></script>
     </body>
 </html>

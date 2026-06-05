@@ -32,6 +32,14 @@ app.get('/patients', (req, res) => {
     });
 }); 
 
+//consultation api route
+app.get('/consult', (req, res) => {
+    db.all('SELECT * FROM CONSULTATION', [], (err, rows) => {
+        if (err) return res.json(err);
+        res.json(rows);
+    });
+}); 
+
 //CREATE (POST) route to save doctor
 app.post('/doctors', (req, res) => {
     const { docFName, docLName, docAddress, docSpecial } = req.body;
@@ -120,6 +128,23 @@ app.delete('/patients/:id', (req, res) => {
         res.json({message: "Patient deleted"});
     });
 });
+
+//CREATE (POST) route to save consultation transaction
+app.post('/consult', (req, res) => {
+    const {patID, docID, consultDate, diagnosis, prescription} = req.body;
+
+    const sql = `INSERT INTO CONSULTATION (patID, docID, consultDate, diagnosis, prescription) VALUES (?, ?, ?, ?, ?)`;
+
+    db.run(sql, [patID, docID, consultDate, diagnosis, prescription], function(err) {
+        if (err) {return res.json(err);}
+
+        res.json({
+            message: "Consultation added successfully",
+            id: this.lastID
+        });
+    });
+
+}); 
 // app.post('/doctors', (req, res) => {
 //     const newItem = req.body.item;
 //     doctors.push(newItem);
