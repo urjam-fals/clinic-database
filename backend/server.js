@@ -145,6 +145,35 @@ app.post('/consult', (req, res) => {
     });
 
 }); 
+
+app.put('/consult/:id', (req, res) => {
+    const id = req.params.id;
+
+    const {patID, docID, consultDate, diagnosis, prescription} = req.body;
+
+    const sql = `
+        UPDATE CONSULTATION
+        SET patID=?, docID=?, consultDate=?, diagnosis=?, prescription=?
+        WHERE consultID=?
+    `;
+
+    db.run(sql, [patID, docID, consultDate, diagnosis, prescription, id], function(err){
+        if(err) return res.json(err);
+        res.json({message:"Consultation Transaction updated"});
+    });
+});
+
+app.delete('/consult/:id', (req, res) => {
+    const id = req.params.id;
+
+    console.log("Deleting consult ID:", id); // 👈 ADD THIS
+
+    db.run("DELETE FROM CONSULTATION WHERE consultID = ?", [id], function(err) {
+        if (err) return res.json(err);
+        console.log("Rows deleted:", this.changes); // 👈 ADD THIS
+        res.json({message: "Consultation deleted"});
+    });
+});
 // app.post('/doctors', (req, res) => {
 //     const newItem = req.body.item;
 //     doctors.push(newItem);

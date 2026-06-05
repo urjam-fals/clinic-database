@@ -1,5 +1,6 @@
 let doctors =[];
 let patients=[];
+let consult=[];
 
 const doctorForm = document.getElementById('doctor-form');
 const doctorList = document.getElementById('doctor-list');
@@ -157,6 +158,12 @@ addConsultForm.addEventListener('submit', async (e) => {
     addConsultForm.reset();
 });
 
+function openConsultForm(){
+    showPage('consultation-add-page');
+    loadPatientOptions();
+    loadDoctorOptions();
+}
+
 async function loadDoctors() {
     const response = await fetch('/doctors');
     doctors = await response.json(); //store globally
@@ -166,7 +173,7 @@ async function loadDoctors() {
             <td>${doc.docID}</td>
             <td>${doc.docFName}</td>
             <td>${doc.docLName}</td>
-            <td>${doc.docAddr0ess}</td>
+            <td>${doc.docAddress}</td>
             <td>${doc.docSpecial}</td>
             <td>
                 <button onclick="editDoctor(${doc.docID})">Edit</button>
@@ -197,7 +204,7 @@ async function loadPatients() {
 
 async function loadConsultations() {
     const response = await fetch('/consult');
-    const consult = await response.json();
+    consult = await response.json();
     
     consultationList.innerHTML = consult.map(con => 
         `<tr>
@@ -208,8 +215,8 @@ async function loadConsultations() {
             <td>${con.diagnosis}</td>
             <td>${con.prescription}</td>
             <td>
-                <button onclick="editPatient(${con.consultID})">Edit</button>
-                <button onclick="deletePatient(${con.consultID})">Delete</button>
+                <button onclick="editConsultationTrans(${con.consultID})">Edit</button>
+                <button onclick="deleteConsultation(${con.consultID})">Delete</button>
             </td>
         </tr>`   
     ).join('');
@@ -238,6 +245,19 @@ async function deletePatient(id) {
     loadPatients(); //refresh table
 }
 
+async function deleteConsultation(id) {
+    console.log("Deleting consult ID:", id);// 👈 check this
+    if(!confirm("Are you sure you want to delete this consultation transaction?")) return;
+
+    await fetch(`/consult/${id}`, {
+        method: 'DELETE'
+    });
+
+    const data = await res.json();
+    console.log(data); // 👈 check response
+    loadConsultations(); //refresh table
+}
+
 async function loadPatientOptions(){
     const response = await fetch('/patients');
     const patients = await response.json();
@@ -264,11 +284,7 @@ async function loadDoctorOptions(){
     ).join('');
 }
 
-function openConsultForm(){
-    showPage('consultation-add-page');
-    loadPatientOptions();
-    loadDoctorOptions();
-}
+
 function editDoctor(id){
     const doc = doctors.find(d => d.docID === id);
 
@@ -306,6 +322,30 @@ function editPatient(id){
     
     //go to form page
     showPage('patient-add-page');
+
+}
+
+async function editConsultationTrans(id){
+    const con = consult.find(c => c.consultID === id);
+
+    //fill form
+    document.getElementById('conPatId').value = con.patID;
+    document.getElementById('conDocId').value = con.docID;
+
+    const formatted = con.consultDate.replace(' ', 'T').slice(0,16);
+    document.getElementById('conDate').value = formatted;
+
+    document.getElementById('conDiagnosis').value = con.diagnosis;
+    document.getElementById('conPrescription').value = con.prescription;
+
+    //store editing ID
+    window.editingId = id;
+
+    // change title BEFORE editing
+    document.querySelector('#consultation-add-page h2').innerText = "Edit Consultation Transaction";
+    
+    //go to form page
+    showPage('consultation-add-page');
 
 }
 
