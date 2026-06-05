@@ -1,3 +1,4 @@
+let doctors =[];
 
 const doctorForm = document.getElementById('doctor-form');
 const doctorList = document.getElementById('doctor-list');
@@ -36,18 +37,26 @@ addDoctorForm.addEventListener('submit', async (e) => {
         docSpecial: document.getElementById('docSpecial').value
     };
 
-    //send to backend
-    const response = await fetch('/doctors', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
+    if(window.editingId){
+        await fetch(`/doctors/${window.editingId}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
 
-    const result = await response.json();
-    alert(result.message);
-
+        window.editingId = null;
+    }else{
+        //send to backend
+        await fetch('/doctors', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+    }
+    
+    //reset title after save
+    document.querySelector('#doctor-add-page h2').innerText = "Add New Doctor";
+        
     //reload table
     loadDoctors();
 
@@ -57,9 +66,11 @@ addDoctorForm.addEventListener('submit', async (e) => {
     //clear form
     addDoctorForm.reset();
 });
+
 async function loadDoctors() {
     const response = await fetch('/doctors');
-    const doctors = await response.json();
+    doctors = await response.json(); //store globally
+
     doctorList.innerHTML = doctors.map(doc => 
         `<tr>
             <td>${doc.docID}</td>
@@ -67,6 +78,10 @@ async function loadDoctors() {
             <td>${doc.docLName}</td>
             <td>${doc.docAddress}</td>
             <td>${doc.docSpecial}</td>
+            <td>
+                <button onclick="editDoctor(${doc.docID})">Edit</button>
+                <button onclick="deleteDoctor(${doc.docID})">Delete</button>
+            </td>
         </tr>`   
     ).join('');
 }
@@ -98,6 +113,36 @@ async function loadConsultations() {
             <td>${con.prescription}</td>
         </tr>`   
     ).join('');
+}
+
+async function deleteDoctor(id) {
+    if(!confirm("Are you sure you want to delete this doctor?")) return;
+
+    await fetch(`/doctors/${id}`, {
+        method: 'DELETE'
+    });
+
+    loadDoctors(); //refresh table
+}
+
+function editDoctor(id){
+    const doc = doctors.find(d => d.docID === id);
+
+    //fill form
+    document.getElementById('docFname').value = doc.docFName;
+    document.getElementById('docLname').value = doc.docLName;
+    document.getElementById('docAddr').value = doc.docAddress;
+    document.getElementById('docSpecial').value = doc.docSpecial;
+
+    //store editing ID
+    window.editingId = id;
+
+    // change title BEFORE editing
+    document.querySelector('#doctor-add-page h2').innerText = "Edit Doctor";
+    
+    //go to form page
+    showPage('doctor-add-page');
+
 }
 
 document.getElementById('search-doctor').addEventListener('keyup', function() {

@@ -49,6 +49,31 @@ app.post('/doctors', (req, res) => {
 
 }); 
 
+app.delete('/doctors/:id', (req, res) => {
+    const id = req.params.id;
+
+    db.run("DELETE FROM DOCTOR WHERE docID = ?", [id], function(err) {
+        if (err) return res.json(err);
+        res.json({message: "Doctor deleted"});
+    });
+});
+
+app.put('/doctors/:id', (req, res) => {
+    const id = req.params.id;
+
+    const {docFName, docLName, docAddress, docSpecial} = req.body;
+
+    const sql = `
+        UPDATE DOCTOR
+        SET docFName=?, docLName=?, docAddress=?, docSpecial=?
+        WHERE docID=?
+    `;
+
+    db.run(sql, [docFName, docLName, docAddress, docSpecial, id], function(err){
+        if(err) return res.json(err);
+        res.json({message:"Doctor updated"});
+    });
+});
 // app.post('/doctors', (req, res) => {
 //     const newItem = req.body.item;
 //     doctors.push(newItem);

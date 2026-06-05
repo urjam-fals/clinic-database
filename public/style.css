@@ -33,6 +33,8 @@ th {
 
 .doctor-table th:nth-child(1),
 .doctor-table td:nth-child(1),
+.doctor-table th:nth-child(6),
+.doctor-table td:nth-child(6),
 .patient-table th:nth-child(1),
 .patient-table td:nth-child(1),
 .patient-table th:nth-child(4),
