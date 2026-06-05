@@ -79,7 +79,8 @@ th {
     margin-top: 15px;
 }
 
-.search-box input {
+.search-box input, 
+.add-doctor-form input {
     width: 100%;
     max-width: 350px;
     padding: 10px 15px;
@@ -89,3 +90,60 @@ th {
     outline: none;
     transition: 0.2s;
 }
+.add-doctor-form {
+    max-width: 400px;
+    margin-top: 20px;
+}
+.add-doctor-form input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.3);
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-secondary {
+    background-color: #ccc;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: #b3b3b3;
+}
+    /* padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: 0.2s; */
+
