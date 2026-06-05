@@ -86,7 +86,13 @@
 
         <section class="page" id="patient-page">
             <div class="container">
-                <button type="submit" onclick="showPage('home-page')">←</button>
+                <div class="search-box">
+                    <button type="button" onclick="showPage('home-page')">← Back</button>
+                    <input type="search" id="search-patient" placeholder="Search patient...">
+                    <button type="button" onclick="showPage('patient-add-page')">+ Add Patient</button>
+                </div>
+
+                <h2>Patient List</h2>
                 <table class="patient-table">
                     <thead>
                         <tr>
@@ -95,6 +101,7 @@
                             <th>Last Name</th>
                             <th>Birthdate</th>
                             <th>Telephone Number</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="patient-list">
@@ -105,6 +112,37 @@
             
         </section>
         
+        <section class="page" id="patient-add-page">
+            <div class="container">
+                
+                <h2>Add New Patient</h2>
+                
+                <form id="add-patient-form" class="add-patient-form">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="patFname" placeholder="Enter first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="patLname" placeholder="Enter last name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Birthdate</label>
+                        <input type="date" id="patBdate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="patTelno" placeholder="e.g. 09123456789" pattern="09[0-9]{9}" maxlength="11" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn-primary">Save</button>
+                        <button type="button" class="btn-secondary" onclick="showPage('patient-page')">Cancel</button>
+                    </div>             
+                </form>   
+            </div>
+
+        </section>
+
         <section class="page" id="consultation-page">
             <div class="container">
                 <button type="submit" onclick="showPage('home-page')">←</button>

@@ -74,6 +74,52 @@ app.put('/doctors/:id', (req, res) => {
         res.json({message:"Doctor updated"});
     });
 });
+
+//CREATE (POST) route to save patient
+app.post('/patients', (req, res) => {
+    const { patFName, patLName, patBDate, patTelNo } = req.body;
+
+    const sql = `INSERT INTO PATIENT (patFName, patLName, patBDate, patTelNo) VALUES (?, ?, ?, ?)`;
+
+    db.run(sql, [patFName, patLName, patBDate, patTelNo], function(err) {
+        if (err) {return res.json(err);}
+
+        res.json({
+            message: "Patient added successfully",
+            id: this.lastID
+        });
+    });
+
+}); 
+
+app.put('/patients/:id', (req, res) => {
+    const id = req.params.id;
+
+    const { patFName, patLName, patBDate, patTelNo } = req.body;
+
+    const sql = `
+        UPDATE PATIENT
+        SET patFName=?, patLName=?, patBDate=?, patTelNo=? 
+        WHERE patID=?
+    `;
+
+    db.run(sql, [patFName, patLName, patBDate, patTelNo, id], function(err){
+        if(err) return res.json(err);
+        res.json({message:"Patient updated"});
+    });
+});
+
+app.delete('/patients/:id', (req, res) => {
+    const id = req.params.id;
+
+    console.log("Deleting patient ID:", id); // 👈 ADD THIS
+
+    db.run("DELETE FROM PATIENT WHERE patID = ?", [id], function(err) {
+        if (err) return res.json(err);
+        console.log("Rows deleted:", this.changes); // 👈 ADD THIS
+        res.json({message: "Patient deleted"});
+    });
+});
 // app.post('/doctors', (req, res) => {
 //     const newItem = req.body.item;
 //     doctors.push(newItem);

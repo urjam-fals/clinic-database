@@ -39,6 +39,8 @@ th {
 .patient-table td:nth-child(1),
 .patient-table th:nth-child(4),
 .patient-table td:nth-child(4),
+.patient-table th:nth-child(6), 
+.patient-table td:nth-child(6),
 .consultation-table th:nth-child(1),
 .consultation-table td:nth-child(1),
 .consultation-table th:nth-child(2),
@@ -82,7 +84,8 @@ th {
 }
 
 .search-box input, 
-.add-doctor-form input {
+.add-doctor-form input, 
+.add-patient-form input {
     width: 100%;
     max-width: 350px;
     padding: 10px 15px;
@@ -92,11 +95,14 @@ th {
     outline: none;
     transition: 0.2s;
 }
-.add-doctor-form {
+
+.add-doctor-form,
+.add-patient-form {
     max-width: 400px;
     margin-top: 20px;
 }
-.add-doctor-form input:focus {
+.add-doctor-form input:focus,
+.add-patient-form input:focus{
     border-color: #4CAF50;
     box-shadow: 0 0 4px rgba(76, 175, 80, 0.3);
 }

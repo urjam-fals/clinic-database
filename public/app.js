@@ -1,4 +1,5 @@
 let doctors =[];
+let patients=[];
 
 const doctorForm = document.getElementById('doctor-form');
 const doctorList = document.getElementById('doctor-list');
@@ -10,6 +11,7 @@ const consultationForm = document.getElementById('consultation-form');
 const consultationList = document.getElementById('consultation-list');
 
 const addDoctorForm = document.getElementById('add-doctor-form');
+const addPatientForm = document.getElementById('add-patient-form');
 
 doctorForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -67,6 +69,47 @@ addDoctorForm.addEventListener('submit', async (e) => {
     addDoctorForm.reset();
 });
 
+addPatientForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    //get values from inputs
+    const data = {
+        patFName: document.getElementById('patFname').value,
+        patLName: document.getElementById('patLname').value,
+        patBDate: document.getElementById('patBdate').value,
+        patTelNo: document.getElementById('patTelno').value
+    };
+
+    if(window.editingId){
+        await fetch(`/patients/${window.editingId}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+
+        window.editingId = null;
+    }else{
+        //send to backend
+        await fetch('/patients', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+    }
+    
+    //reset title after save
+    document.querySelector('#patient-add-page h2').innerText = "Add New Patient";
+        
+    //reload table
+    loadPatients();
+
+    //go back to doctor list page
+    showPage('patient-page');
+
+    //clear form
+    addPatientForm.reset();
+});
+
 async function loadDoctors() {
     const response = await fetch('/doctors');
     doctors = await response.json(); //store globally
@@ -76,7 +119,7 @@ async function loadDoctors() {
             <td>${doc.docID}</td>
             <td>${doc.docFName}</td>
             <td>${doc.docLName}</td>
-            <td>${doc.docAddress}</td>
+            <td>${doc.docAddr0ess}</td>
             <td>${doc.docSpecial}</td>
             <td>
                 <button onclick="editDoctor(${doc.docID})">Edit</button>
@@ -88,7 +131,8 @@ async function loadDoctors() {
 
 async function loadPatients() {
     const response = await fetch('/patients');
-    const patients = await response.json();
+    patients = await response.json();
+
     patientList.innerHTML = patients.map(pat => 
         `<tr>
             <td>${pat.patID}</td>
@@ -96,6 +140,10 @@ async function loadPatients() {
             <td>${pat.patLName}</td>
             <td>${pat.patBDate}</td>
             <td>${pat.patTelNo}</td>
+            <td>
+                <button onclick="editPatient(${pat.patID})">Edit</button>
+                <button onclick="deletePatient(${pat.patID})">Delete</button>
+            </td>
         </tr>`   
     ).join('');
 }
@@ -125,6 +173,19 @@ async function deleteDoctor(id) {
     loadDoctors(); //refresh table
 }
 
+async function deletePatient(id) {
+    console.log("Deleting ID:", id); // 👈 DEBUG
+    if(!confirm("Are you sure you want to delete this patient?")) return;
+
+    await fetch(`/patients/${id}`, {
+        method: 'DELETE'
+    });
+    const data = await res.json()
+    console.log(data); // 👈 SEE RESPONSE
+
+    loadPatients(); //refresh table
+}
+
 function editDoctor(id){
     const doc = doctors.find(d => d.docID === id);
 
@@ -145,6 +206,26 @@ function editDoctor(id){
 
 }
 
+function editPatient(id){
+    const pat = patients.find(p => p.patID === id);
+
+    //fill form
+    document.getElementById('patFname').value = pat.patFName;
+    document.getElementById('patLname').value = pat.patLName;
+    document.getElementById('patBdate').value = pat.patBDate;
+    document.getElementById('patTelno').value = pat.patTelNo;
+
+    //store editing ID
+    window.editingId = id;
+
+    // change title BEFORE editing
+    document.querySelector('#patient-add-page h2').innerText = "Edit Patient";
+    
+    //go to form page
+    showPage('patient-add-page');
+
+}
+
 document.getElementById('search-doctor').addEventListener('keyup', function() {
     const input = this.value.toLowerCase();
     const rows = document.querySelectorAll('#doctor-list tr');
@@ -155,6 +236,19 @@ document.getElementById('search-doctor').addEventListener('keyup', function() {
     });
 });
 
+document.getElementById('search-patient').addEventListener('keyup', function() {
+    const input = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#patient-list tr');
+
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
+    });
+});
+
+document.getElementById('patTelno').addEventListener('input', function() {
+    this.valule = this.value.replace(/[^0-9]/g, '');//remove non-numbers
+});
 
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => {
