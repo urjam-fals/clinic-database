@@ -75,3 +75,17 @@ th {
     text-align: center;
 }
 
+.search-box {
+    margin-top: 15px;
+}
+
+.search-box input {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px 15px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.2s;
+}

@@ -26,9 +26,14 @@
         
         <section class="page" id="doctor-page">
             <div class="container">
-                <input type="search" id="search-doctor" placeholder="Search by name...">
-                <button type="submit" onclick="showPage('home-page')">Back to Home</button>
-
+                <div class="search-box">
+                    <button type="button" onclick="showPage('home-page')">← Back</button>
+                    <input type="search" id="search-doctor" placeholder="Search doctor...">
+                    <button type="button" onclick="showPage('doctor-add-page')">+ Add Doctor</button>
+                </div>
+            
+                
+                <h2>Doctor List</h2>
                 <table class="doctor-table">
                     <thead>
                         <tr>
@@ -43,15 +48,30 @@
                         <!-- Doctor data will be populated here -->
                     </tbody>
                 </table>
-                <!-- <ul id="output"></ul> -->
-                
+                    <!-- <ul id="output"></ul> -->                
             </div>
-            
+        </section>
+
+        <section class="page" id="doctor-add-page">
+            <div class="container">
+                
+                <h2>Add New Doctor</h2>
+                <form id="add-doctor-form">
+                    <input type="text" id="docFname" placeholder="First Name" required>
+                    <input type="text" id="docLname" placeholder="Last Name" required>
+                    <input type="text" id="docAddr" placeholder="Address" required>
+                    <input type="text" id="docSpecial" placeholder="Specialization" required>
+                    <button type="submit">Add Doctor</button>
+                </form>
+
+                <button type="button" onclick="showPage('doctor-page')">← Back</button>
+            </div>
+
         </section>
 
         <section class="page" id="patient-page">
             <div class="container">
-                <button type="submit" onclick="showPage('home-page')">Back to Home</button>
+                <button type="submit" onclick="showPage('home-page')">←</button>
                 <table class="patient-table">
                     <thead>
                         <tr>
@@ -72,7 +92,7 @@
         
         <section class="page" id="consultation-page">
             <div class="container">
-                <button type="submit" onclick="showPage('home-page')">Back to Home</button>
+                <button type="submit" onclick="showPage('home-page')">←</button>
                 <!-- <form id="consultation-form">
 
                 </form> -->

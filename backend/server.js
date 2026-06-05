@@ -32,13 +32,23 @@ app.get('/patients', (req, res) => {
     });
 }); 
 
-//consultations api route
-app.get('/consult', (req, res) => {
-    db.all('SELECT * FROM CONSULTATION', [], (err, rows) => {
-        if (err) return res.json(err);
-        res.json(rows);
+//CREATE (POST) route to save doctor
+app.post('/doctors', (req, res) => {
+    const { docFName, docLName, docAddress, docSpecial } = req.body;
+
+    const sql = `INSERT INTO DOCTOR (docFName, docLName, docAddress, docSpecial) VALUES (?, ?, ?, ?)`;
+
+    db.run(sql, [docFName, docLName, docAddress, docSpecial], function(err) {
+        if (err) {return res.json(err);}
+
+        res.json({
+            message: "Doctor added successfully",
+            id: this.lastID
+        });
     });
+
 }); 
+
 // app.post('/doctors', (req, res) => {
 //     const newItem = req.body.item;
 //     doctors.push(newItem);
