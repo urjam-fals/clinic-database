@@ -174,6 +174,35 @@ app.delete('/consult/:id', (req, res) => {
         res.json({message: "Consultation deleted"});
     });
 });
+
+app.get('/doctors/inquiry', (req, res) => {
+
+    const spec = req.query.specialization;
+
+    let sqlData = `SELECT docID, docFName, docLName, docSpecial FROM DOCTOR`;
+    let sqlCount = `SELECT COUNT(*) AS total FROM DOCTOR`;
+
+    let params = [];
+
+    if(spec) {
+        sqlData += ` WHERE docSpecial LIKE ?`;
+        sqlCount += ` WHERE docSpecial LIKE ?`;
+        params = [`%${spec}%`];
+    }
+
+    db.all(sqlData, params, (err, rows) => {
+        if (err) return res.json(err);
+
+        db.get(sqlCount, params, (err2, countRow) => {
+            if(err2) return res.json(err2);
+
+            res.json({
+                data:rows,
+                count:countRow.total
+            });
+        });
+    });
+});
 // app.post('/doctors', (req, res) => {
 //     const newItem = req.body.item;
 //     doctors.push(newItem);

@@ -11,6 +11,9 @@ const patientList = document.getElementById('patient-list');
 const consultationForm = document.getElementById('consultation-form');
 const consultationList = document.getElementById('consultation-list');
 
+const inquiryForm = document.getElementById('consultation-inquiry-form');
+const specializationList = document.getElementById('specialization-list');
+
 const addDoctorForm = document.getElementById('add-doctor-form');
 const addPatientForm = document.getElementById('add-patient-form');
 const addConsultForm = document.getElementById('add-consultation-form');
@@ -30,6 +33,11 @@ consultationForm.addEventListener('submit', async (e) => {
     loadConsultations();   
 });
 
+inquiryForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    openInquiry();
+});
+
 addDoctorForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -41,14 +49,14 @@ addDoctorForm.addEventListener('submit', async (e) => {
         docSpecial: document.getElementById('docSpecial').value
     };
 
-    if(window.editingId){
-        await fetch(`/doctors/${window.editingId}`, {
+    if(window.editingDoctorId){
+        await fetch(`/doctors/${window.editingDoctorId}`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         });
 
-        window.editingId = null;
+        window.editingDoctorId = null;
     }else{
         //send to backend
         await fetch('/doctors', {
@@ -60,12 +68,12 @@ addDoctorForm.addEventListener('submit', async (e) => {
     
     //reset title after save
     document.querySelector('#doctor-add-page h2').innerText = "Add New Doctor";
-        
-    //reload table
-    loadDoctors();
-
+    
     //go back to doctor list page
     showPage('doctor-page');
+
+    //reload table
+    loadDoctors();
 
     //clear form
     addDoctorForm.reset();
@@ -82,14 +90,14 @@ addPatientForm.addEventListener('submit', async (e) => {
         patTelNo: document.getElementById('patTelno').value
     };
 
-    if(window.editingId){
-        await fetch(`/patients/${window.editingId}`, {
+    if(window.editingPatientId){
+        await fetch(`/patients/${window.editingPatientId}`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         });
 
-        window.editingId = null;
+        window.editingPatientId = null;
     }else{
         //send to backend
         await fetch('/patients', {
@@ -128,14 +136,14 @@ addConsultForm.addEventListener('submit', async (e) => {
         prescription: document.getElementById('conPrescription').value
     };
 
-    if(window.editingId){
-        await fetch(`/consult/${window.editingId}`, {
+    if(window.editingConsultId){
+        await fetch(`/consult/${window.editingConsultId}`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         });
 
-        window.editingId = null;
+        window.editingConsultId = null;
     }else{
         //send to backend
         await fetch('/consult', {
@@ -162,6 +170,11 @@ function openConsultForm(){
     showPage('consultation-add-page');
     loadPatientOptions();
     loadDoctorOptions();
+}
+
+function openInquiry() {
+    showPage('consult-inquiry-page');
+    loadInquiry(); // load ALL doctors initially
 }
 
 async function loadDoctors() {
@@ -222,6 +235,24 @@ async function loadConsultations() {
     ).join('');
 }
 
+async function loadInquiry(spec = "") {
+    const response = await fetch(`/doctors/inquiry?specialization=${encodeURIComponent(spec)}`);
+    const result = await response.json();
+
+    // 1. render table
+    specializationList.innerHTML = result.data.map(s => 
+        `<tr>
+            <td>${s.docID}</td>
+            <td>${s.docFName}</td>
+            <td>${s.docLName}</td>
+            <td>${s.docSpecial}</td>
+        </tr>`   
+    ).join('');   
+
+    // 2. show COUNT (IMPORTANT REQUIREMENT)
+    document.getElementById('special-count').innerText =`Total Doctors: ${result.count}`;
+}
+
 async function deleteDoctor(id) {
     if(!confirm("Are you sure you want to delete this doctor?")) return;
 
@@ -234,9 +265,10 @@ async function deleteDoctor(id) {
 
 async function deletePatient(id) {
     console.log("Deleting ID:", id); // 👈 DEBUG
+
     if(!confirm("Are you sure you want to delete this patient?")) return;
 
-    await fetch(`/patients/${id}`, {
+    const res = await fetch(`/patients/${id}`, {
         method: 'DELETE'
     });
     const data = await res.json()
@@ -249,7 +281,7 @@ async function deleteConsultation(id) {
     console.log("Deleting consult ID:", id);// 👈 check this
     if(!confirm("Are you sure you want to delete this consultation transaction?")) return;
 
-    await fetch(`/consult/${id}`, {
+    const res = await fetch(`/consult/${id}`, {
         method: 'DELETE'
     });
 
@@ -284,9 +316,8 @@ async function loadDoctorOptions(){
     ).join('');
 }
 
-
 function editDoctor(id){
-    const doc = doctors.find(d => d.docID === id);
+    const doc = doctors.find(d => d.docID == id);
 
     //fill form
     document.getElementById('docFname').value = doc.docFName;
@@ -295,7 +326,7 @@ function editDoctor(id){
     document.getElementById('docSpecial').value = doc.docSpecial;
 
     //store editing ID
-    window.editingId = id;
+    window.editingDoctorId = id;
 
     // change title BEFORE editing
     document.querySelector('#doctor-add-page h2').innerText = "Edit Doctor";
@@ -315,7 +346,7 @@ function editPatient(id){
     document.getElementById('patTelno').value = pat.patTelNo;
 
     //store editing ID
-    window.editingId = id;
+    window.editingPatientId = id;
 
     // change title BEFORE editing
     document.querySelector('#patient-add-page h2').innerText = "Edit Patient";
@@ -332,14 +363,14 @@ async function editConsultationTrans(id){
     document.getElementById('conPatId').value = con.patID;
     document.getElementById('conDocId').value = con.docID;
 
-    const formatted = con.consultDate.replace(' ', 'T').slice(0,16);
+    const formatted = new Date(con.consultDate).toISOString().slice(0,16);
     document.getElementById('conDate').value = formatted;
 
     document.getElementById('conDiagnosis').value = con.diagnosis;
     document.getElementById('conPrescription').value = con.prescription;
 
     //store editing ID
-    window.editingId = id;
+    window.editingConsultId = id;
 
     // change title BEFORE editing
     document.querySelector('#consultation-add-page h2').innerText = "Edit Consultation Transaction";
@@ -379,8 +410,14 @@ document.getElementById('search-consultation-trans').addEventListener('keyup', f
     });
 });
 
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('search-special').addEventListener('input', function () {
+        loadInquiry(this.value);
+    });
+});
+
 document.getElementById('patTelno').addEventListener('input', function() {
-    this.valule = this.value.replace(/[^0-9]/g, '');//remove non-numbers
+    this.value = this.value.replace(/[^0-9]/g, '');//remove non-numbers
 });
 
 function showPage(pageId) {

@@ -20,6 +20,9 @@
                 <form id="consultation-form">
                     <button type="submit" onclick="showPage('consultation-page')">Consultation Transaction Management</button>  
                 </form>   
+                <form id="consultation-inquiry-form">
+                    <button type="submit" onclick="showPage('consult-inquiry-page')">Consultation Transaction Inquiry</button>  
+                </form>   
             </div>
     
         </section>
@@ -207,6 +210,32 @@
                 </form>   
             </div>
 
+        </section>
+
+        <section class="page" id="consult-inquiry-page">
+            <div class="container">
+                <div class="search-box">
+                    <button type="button" onclick="showPage('home-page')">← Back</button>
+                    <input type="search" id="search-special" placeholder="Search specialization">
+                    <button onclick="openInquiry()">Inquiry</button>
+                </div>
+
+                <h2>Specialization</h2>
+                <p id="special-count">Total Doctors: 0</p>
+                <table class="specialization-table">
+                    <thead>
+                        <tr>
+                            <th>ID Number</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Specialization</th>
+                        </tr>
+                    </thead>
+                    <tbody id="specialization-list">
+                        <!-- Consultation data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </section>
         <script src= "app.js"></script>
     </body>
